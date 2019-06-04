@@ -45,6 +45,9 @@
 namespace phylotools {
 
 
+/**
+ *
+ */
 class BinaryCharacterMatrix {
  public:
     /**
@@ -64,9 +67,9 @@ class BinaryCharacterMatrix {
     void writeNewick(std::ostream &os);
 
  protected:
-    size_t countColumns(std::istream &is);
-    std::vector<std::string> splits_;  /**< */
-    std::vector<std::string> labels_;  /**< */
+    size_t countColumns(std::istream &is);  /**< */
+    std::vector<std::string> splits_;       /**< */
+    std::vector<std::string> labels_;       /**< */
 };
 
 
