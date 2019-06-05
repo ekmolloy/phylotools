@@ -120,15 +120,8 @@ void BinaryCharacterMatrix::readPhylip(std::istream &is) {
         // Read sequence
         for (j = last; j < line.length(); j++) {
             c = line[j];
-            switch (c) {
-                case '0':
+            if ((c == '0') || (c == '1') || (c == '?')) {
                     splits_[i].push_back(c);
-                    break;
-                case '1':
-                    splits_[i].push_back(c);
-                    break;
-                default:
-                    break;
             }
         }
 
@@ -188,17 +181,9 @@ void BinaryCharacterMatrix::readFasta(std::istream &is) {
                     exit(1);
                 }
                 c = line[i];
-                switch (c) {
-                    case '0':
-                        splits_[nseq].push_back(c);
-                        ++last;
-                        break;
-                    case '1':
-                        splits_[nseq].push_back(c);
-                        ++last;
-                        break;
-                    default:
-                        break;
+                if ((c == '0') || (c == '1') || (c == '?')) {
+                    splits_[nseq].push_back(c);
+                    ++last;
                 }
             }
         }
@@ -228,35 +213,43 @@ void BinaryCharacterMatrix::readMatrix(std::istream &is) {
 
 
 void BinaryCharacterMatrix::writeNewick(std::ostream &os) {
-    std::string astr, bstr;
+    std::string str0, str1;
     size_t nseq, nchr;
-    bool a, b;
+    int num0, num1;
+    char c;
 
     nseq = labels_.size();
     nchr = splits_[0].size();
 
     for (size_t j = 0; j < nchr; j++) {
-        astr = "(";
-        bstr = "(";
-        a = false;
-        b = false;
+        str0 = "(";
+        str1 = "(";
+        num0 = 0;
+        num1 = 0;
         for (size_t i = 0; i < nseq; i++) {
-            if (splits_[i][j] == '0') {
-                if (a == false) {
-                    a = true;
-                    astr += labels_[i];
-                } else {
-                    astr += "," + labels_[i];
-                }
-            } else {
-                if (b == false) {
-                    b = true;
-                    bstr += labels_[i];
-                } else {
-                    bstr += "," + labels_[i];
-                }
+            c = splits_[i][j];
+            switch (c) {
+                case '0' :
+                    if (num0 == 0) {
+                        str0 += labels_[i];
+                    } else {
+                        str0 += "," + labels_[i];
+                    }
+                    ++num0;
+                    break;
+                case '1' :
+                    if (num1 == 0) {
+                        str1 += labels_[i];
+                    } else {
+                        str1 += "," + labels_[i];
+                    }
+                    ++num1;
+                default :
+                    break;
             }
         }
-        os << astr << "," << bstr << "))" << std::endl;
+        if ((num0 > 1) && (num1 > 1)) {
+            os << str0 << "," << str1 << "))" << std::endl;
+        }
     }
 }
