@@ -8,6 +8,9 @@ make
 ./run_binary_character_matrix_to_newick [input file] > [output file]
 ```
 
+**Note 1:** You may need to edit the Makefile to replace `G++` with your C++ compiler.
+
+**Note 2:**
 If nothing is written to the output file, there may be having issues with the newline character used in your input file, as discussed [here](https://leemendelowitz.github.io/blog/remove-carriage-return-control-character.html). 
 To summarize, the input file must use `\n` as the newline character.
 If it was created on a Windows system, then `\r\n` may be used as the newline character.
